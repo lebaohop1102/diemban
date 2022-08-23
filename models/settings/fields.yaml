@@ -1,0 +1,35 @@
+fields:
+    api_key:
+        span: left
+        label: thaiminh.diemban::lang.settings.api_key
+        commentAbove: thaiminh.diemban::lang.settings.api_key_comment
+
+    products_code:
+        span: right
+        label: thaiminh.diemban::lang.settings.products_code
+        commentAbove: thaiminh.diemban::lang.settings.products_code_comment
+
+    company:
+        span: left
+        label: thaiminh.diemban::lang.settings.company
+        type: dropdown
+        options:
+            '': thaiminh.diemban::lang.settings.select_company
+            tm: thaiminh.diemban::lang.settings.company_tm
+            pk: thaiminh.diemban::lang.settings.company_pk
+
+tabs:
+    fields:
+        heading_page:
+            tab: thaiminh.diemban::lang.strings.content
+            span: full
+            type: richeditor
+            label: thaiminh.diemban::lang.settings.heading_page
+            commentAbove: thaiminh.diemban::lang.settings.heading_page_comment
+
+        heading_page_detail:
+            tab: thaiminh.diemban::lang.strings.content
+            span: full
+            type: richeditor
+            label: thaiminh.diemban::lang.settings.heading_page_detail
+            commentAbove: thaiminh.diemban::lang.settings.heading_page_detail_comment
