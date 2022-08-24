@@ -1,0 +1,8 @@
+{
+    "name": "thaiminh/diemban-plugin",
+    "type": "october-plugin",
+    "description": "1 san pham cua Thai Minh Group",
+    "require": {
+        "composer/installers": "~1.0"
+    }
+}
