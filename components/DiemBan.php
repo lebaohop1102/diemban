@@ -36,10 +36,10 @@ class DiemBan extends ComponentBase
 
     public function onRun() {
 
-        $this->page->addCss('/plugins/thaiminh/diemban/assets/css/thaiminh.diemban-style.css', 'core');
+        $this->addCssBundle('/plugins/thaiminh/diemban/assets/less/thaiminh.diemban-style.less');
 
         $query_location = $this->property('location');
-        $this->location = $this->get_location_by_slug($query_location);;
+        $this->location = $this->get_location_by_slug($query_location);
 
         $this->f_province = isset($this->location) && !empty($this->location['data']['province']) ? $this->location['data']['province'] : '';
         $this->f_district = isset($this->location) && !empty($this->location['data']['province']) && !empty($this->location['data']['district']) ? $this->location['data']['district'] : '';
