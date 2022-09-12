@@ -28,9 +28,9 @@
     margin-bottom: 20px;
   }
   .wrap-diemban .table-province td {
-    float: left;
+    /* float: left; */
     width: 25%;
-    height: auto;
+    /* height: auto; */
   }
 
   .wrap-diemban .table-province ul {
