@@ -1,6 +1,7 @@
 <?php namespace Thaiminh\Diemban\Models;
 
 use Model;
+use Thaiminh\Diemban\Models\Settings;
 
 class DiemBan extends Model
 {
@@ -145,6 +146,7 @@ class DiemBan extends Model
     }
 
     static function get_icons($product_code, $icons_value){
+        $icons = '';
         if( !empty($icons_value) ){
     
             $array_number = explode(',', $icons_value);
