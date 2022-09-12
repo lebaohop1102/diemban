@@ -32,6 +32,17 @@
     width: 25%;
     height: auto;
   }
+
+  .wrap-diemban .table-province ul {
+      list-style: none;
+  }
+  
+  .wrap-diemban .table-province ul li {
+      margin-bottom: 10px;
+      color: #333;
+      list-style: none;
+      margin-left: 0;
+  }
   
   @media (max-width: 767px) {
     .wrap-diemban .table-province ul {
