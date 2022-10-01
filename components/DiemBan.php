@@ -16,6 +16,7 @@ class DiemBan extends ComponentBase
     public $regions;
     public $show_district;
     public $base_url;
+    public $prefix;
     public $local_region_map;
 
     public $location;
@@ -64,14 +65,19 @@ class DiemBan extends ComponentBase
         $this->heading_deail = Settings::get('heading_page_detail');
         $this->base_url = config('app.url');
 
+        $this->prefix = 'diem-ban';
+
         $this->provinces = array_map(function ($province) {
             if(in_array($province['id'], $this->show_district)){
                 $districts = array_map(function($_district) use ($province) {
-                    $url = sprintf('%s/%s/%s-%d',
+                    // $url = sprintf('%s/%s/%s-%d',
+                    $url = sprintf('%s/%s/%s.html',
                         $this->base_url,
-                        $this->local_region_map[$province['local_region_id']]['slug'],
-                        $_district['district_slug'],
-                        $_district['id']);
+                        // $this->local_region_map[$province['local_region_id']]['slug'],
+                        $this->prefix,
+                        is_numeric($_district['district_slug']) ? 'quan-'.$_district['district_slug'] : $_district['district_slug'],
+                        // $_district['id']
+                    );
                     $_district['url'] = $url;
                     $_district['full_name'] = is_numeric($_district['district_name']) ? $_district['district_name_with_type'] : $_district['district_name'];
                     return $_district;
@@ -103,11 +109,13 @@ class DiemBan extends ComponentBase
             $_provinces = [];
             foreach(array_chunk($region['provinces'], 4) as $key2 => $chunk){
                 foreach($chunk as $item){
-                    $url = sprintf('%s/%s/%s-%d',
+                    // $url = sprintf('%s/%s/%s-%d',
+                    $url = sprintf('%s/%s/%s.html',
                         $this->base_url,
-                        $this->local_region_map[$key]['slug'],
+                        // $this->local_region_map[$key]['slug'],
+                        $this->prefix,
                         $item['slug'],
-                        $item['id']
+                        // $item['id']
                     );
                     $item['url'] = $url;
                     $_provinces[$key2][] = $item;
@@ -167,15 +175,23 @@ class DiemBan extends ComponentBase
         if(!$location){
             return;
         }
-        $locationArr = explode('-', $location);
-        $location_id = array_pop($locationArr);
-        $slug = implode('-', $locationArr);
+        $locationArr = explode('.html', $location);
+        $locationArr = array_filter($locationArr);
+    
+        // $location_id = array_pop($locationArr);
+        // $slug = implode('-', $locationArr);
+
+        $slug = !empty($locationArr) ? $locationArr[0] : '';
+        if(!$slug){
+            return [];
+        }
     
         $provinces = $this->provinces();
         $districts = $this->districts();
     
-        $province = array_filter($provinces, function($province) use ($location_id, $slug) {
-            return $slug == $province['province_slug'] && $location_id == $province['id'];
+        // $province = array_filter($provinces, function($province) use ($location_id, $slug) {
+        $province = array_filter($provinces, function($province) use ($slug) {
+            return $slug == $province['province_slug'];
         }, ARRAY_FILTER_USE_BOTH);
     
         $province = array_values($province);
@@ -190,8 +206,9 @@ class DiemBan extends ComponentBase
             ];
         }
     
-        $district = array_filter($districts, function($district) use ($location_id, $slug) {
-            return $slug == $district['district_slug'] && $location_id == $district['id'];
+        // $district = array_filter($districts, function($district) use ($location_id, $slug) {
+        $district = array_filter($districts, function($district) use ($slug) {
+            return $slug == $district['district_slug'];
         }, ARRAY_FILTER_USE_BOTH);
     
         $district = array_values($district);

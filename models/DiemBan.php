@@ -2,6 +2,7 @@
 
 use Model;
 use Thaiminh\Diemban\Models\Settings;
+use Illuminate\Support\Facades\Cache;
 
 class DiemBan extends Model
 {
@@ -222,6 +223,7 @@ class DiemBan extends Model
         $token = Settings::get('api_key');
 
         $api_url = 'https://api.nhathuoc.tmp.vn/api/stores/';
+        $cache_key = "api_diem_ban_{$source}_{$product_code}_{$province_id}_{$district_id}";
         if ($province_id){
             $endpoint = $api_url."{$source}/{$product_code}/{$province_id}_{$district_id}";
         }else{
@@ -233,8 +235,11 @@ class DiemBan extends Model
             'Content-Type: application/json',
         );
     
-        $response = self::send($endpoint, 'POST', $header);
-        return $response;
+        $cache_key = "api_diem_ban_{$source}_{$product_code}_{$province_id}_{$district_id}";
+        
+        return Cache::remember($cache_key, now()->addMinutes(60), function () use ($endpoint, $header) {
+            return self::send($endpoint, 'POST', $header);    
+        });
     
     }
     
