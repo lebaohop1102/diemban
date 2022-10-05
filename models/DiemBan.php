@@ -7,8 +7,12 @@ use Illuminate\Support\Facades\Cache;
 class DiemBan extends Model
 {
     static function tm_diemban($province_id = 0, $district_id = 0){
-        $product_code = Settings::get('products_code');
-        if (!$product_code) return '';
+        $product_setting = Settings::get('product_setting');
+        if(!$product_setting){
+            return;
+        }
+        $product_setting = collect($product_setting)->groupBy('product_code')->keys()->toArray();
+        $product_code = implode('_', $product_setting);
 
         $data = self::get_diem_ban_data($product_code, $province_id, $district_id);
 

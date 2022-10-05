@@ -1,17 +1,16 @@
 fields:
     api_key:
-        span: left
+        span: storm
+        cssClass: col-sm-3
+        type: text
+        required: 1
         label: thaiminh.diemban::lang.settings.api_key
-        commentAbove: thaiminh.diemban::lang.settings.api_key_comment
-
-    products_code:
-        span: right
-        label: thaiminh.diemban::lang.settings.products_code
-        commentAbove: thaiminh.diemban::lang.settings.products_code_comment
 
     company:
-        span: left
+        span: storm
+        cssClass: col-sm-3
         label: thaiminh.diemban::lang.settings.company
+        required: 1
         type: dropdown
         options:
             '': thaiminh.diemban::lang.settings.select_company
@@ -20,10 +19,17 @@ fields:
 
 tabs:
     fields:
+        title_show:
+            tab: thaiminh.diemban::lang.strings.content
+            type: text
+            required: 1
+            label: thaiminh.diemban::lang.settings.title_show
+
         heading_page:
             tab: thaiminh.diemban::lang.strings.content
             span: full
             type: richeditor
+            required: 1
             label: thaiminh.diemban::lang.settings.heading_page
             commentAbove: thaiminh.diemban::lang.settings.heading_page_comment
 
@@ -31,5 +37,49 @@ tabs:
             tab: thaiminh.diemban::lang.strings.content
             span: full
             type: richeditor
+            required: 1
             label: thaiminh.diemban::lang.settings.heading_page_detail
             commentAbove: thaiminh.diemban::lang.settings.heading_page_detail_comment
+
+        seo_prefix:
+            tab: thaiminh.diemban::lang.seo_setting.tab_name
+            type: text
+            label: thaiminh.diemban::lang.seo_setting.seo_prefix
+            commentAbove: thaiminh.diemban::lang.seo_setting.seo_prefix_comment
+
+        seo_is_location:
+            tab: thaiminh.diemban::lang.seo_setting.tab_name
+            label: 'Bật cấu hình prefix theo miền'
+            commentAbove: 'Ví dụ: /mien-bac, /mien-trung, /mien-nam'
+            type: checkbox
+            default: false
+
+        product_setting:
+            label: thaiminh.diemban::lang.product_setting.tab_name
+            prompt: thaiminh.diemban::lang.product_setting.tab_add
+            size: huge
+            span: full
+            required: 1
+            type: repeater
+            # minItems: 1
+            tab: thaiminh.diemban::lang.product_setting.tab_name
+            form:
+                fields:
+                    product_name:
+                        label: 'Tên sản phẩm'
+                        span: storm
+                        type: text
+                        required: 1
+                        cssClass: col-sm-3
+                    product_code:
+                        label: 'Mã sản phẩm'
+                        span: storm
+                        type: text
+                        required: 1
+                        cssClass: col-sm-2
+                    product_color:
+                        label: 'Mã màu icon'
+                        span: storm
+                        type: text
+                        required: 1
+                        cssClass: col-sm-2

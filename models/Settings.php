@@ -1,10 +1,12 @@
 <?php namespace Thaiminh\Diemban\Models;
 
 use Model;
-use Illuminate\Support\Facades\Validator;
+use October\Rain\Database\Traits\Validation;
 
 class Settings extends Model
 {
+    use Validation;
+
     public $implement = ['System.Behaviors.SettingsModel'];
 
     public $settingsCode = 'thaiminh_diemban_settings';
@@ -18,5 +20,8 @@ class Settings extends Model
         'api_key'   => 'required',
         'products_code'   => 'required',
         'company'   => 'required',
+        'product_setting.*.product_name'   => 'required',
+        'product_setting.*.product_code'   => 'required',
+        'product_setting.*.product_color'   => 'required',
     ];
 }

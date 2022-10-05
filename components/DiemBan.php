@@ -15,9 +15,12 @@ class DiemBan extends ComponentBase
     public $provinces;
     public $regions;
     public $show_district;
+
+    public $title_show;
     public $base_url;
     public $prefix;
     public $local_region_map;
+    public $fullPrefix;
 
     public $location;
     public $f_province;
@@ -65,18 +68,26 @@ class DiemBan extends ComponentBase
         $this->heading_deail = Settings::get('heading_page_detail');
         $this->base_url = config('app.url');
 
+        //
         $this->prefix = 'diem-ban';
+        $seo_prefix = Settings::get('seo_prefix');
+        if($seo_prefix)
+        {
+            $this->prefix = $seo_prefix;
+        }
+
+        //
+        $this->title_show = Settings::get('title_show');
+
 
         $this->provinces = array_map(function ($province) {
             if(in_array($province['id'], $this->show_district)){
-                $districts = array_map(function($_district) use ($province) {
-                    // $url = sprintf('%s/%s/%s-%d',
+                $fullPrefix = $this->_prefix($province['local_region_id']);
+                $districts = array_map(function($_district) use ($fullPrefix) {
                     $url = sprintf('%s/%s/%s.html',
                         $this->base_url,
-                        // $this->local_region_map[$province['local_region_id']]['slug'],
-                        $this->prefix,
-                        is_numeric($_district['district_slug']) ? 'quan-'.$_district['district_slug'] : $_district['district_slug'],
-                        // $_district['id']
+                        $fullPrefix,
+                        $_district['district_slug'],
                     );
                     $_district['url'] = $url;
                     $_district['full_name'] = is_numeric($_district['district_name']) ? $_district['district_name_with_type'] : $_district['district_name'];
@@ -107,15 +118,13 @@ class DiemBan extends ComponentBase
 
         $this->regions = array_map(function($key, $region){
             $_provinces = [];
+            $fullPrefix = $this->_prefix($key);
             foreach(array_chunk($region['provinces'], 4) as $key2 => $chunk){
                 foreach($chunk as $item){
-                    // $url = sprintf('%s/%s/%s-%d',
                     $url = sprintf('%s/%s/%s.html',
                         $this->base_url,
-                        // $this->local_region_map[$key]['slug'],
-                        $this->prefix,
+                        $fullPrefix,
                         $item['slug'],
-                        // $item['id']
                     );
                     $item['url'] = $url;
                     $_provinces[$key2][] = $item;
@@ -126,13 +135,13 @@ class DiemBan extends ComponentBase
         }, array_keys($this->regions), $this->regions);
 
         if($this->f_province && !$this->f_district){
-            $this->title = 'Điểm bán Khương Thảo Đan tại '.$this->f_province['province_name'];
+            $this->title = 'Điểm bán '.$this->title_show.' tại '.$this->f_province['province_name'];
             $this->desc = $this->heading_deail;
         }elseif($this->f_province && $this->f_district){
-            $this->title = 'Điểm bán Khương Thảo Đan tại '. $this->f_district['district_name_with_type'] .' - '. $this->f_province['province_name'];
+            $this->title = 'Điểm bán '.$this->title_show.' tại '. $this->f_district['district_name_with_type'] .' - '. $this->f_province['province_name'];
             $this->desc = $this->heading_deail;
         }else{
-            $this->title = 'Điểm bán Khương Thảo Đan';
+            $this->title = 'Điểm bán '.$this->title_show;
             $this->desc = $this->heading;
         }
 
@@ -156,6 +165,17 @@ class DiemBan extends ComponentBase
             'regions',
             'local_region_map'
         ))->render();
+    }
+
+    protected function _prefix($local_region_id){
+        //
+        $seo_is_location = Settings::get('seo_is_location');
+        $this->fullPrefix =  $this->prefix;
+        if($seo_is_location) {
+            $this->fullPrefix = $this->local_region_map[$local_region_id]['slug'];
+        }
+
+        return $this->fullPrefix;
     }
 
     protected function provinces()
