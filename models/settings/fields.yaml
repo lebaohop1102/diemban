@@ -61,7 +61,7 @@ tabs:
             span: full
             required: 1
             type: repeater
-            # minItems: 1
+            minItems: 1
             tab: thaiminh.diemban::lang.product_setting.tab_name
             form:
                 fields:
