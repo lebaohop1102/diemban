@@ -3,6 +3,7 @@
 use Backend;
 use System\Classes\PluginBase;
 use Illuminate\Foundation\AliasLoader;
+use ThaiMinh\DiemBan\Console\CacheApiDiemBanCommand;
 
 /**
  * diemban Plugin Information File
@@ -31,7 +32,7 @@ class Plugin extends PluginBase
      */
     public function register()
     {
-
+        $this->registerConsoleCommand('diemban:cacheapidiembancommand', CacheApiDiemBanCommand::class);
     }
 
     /**
@@ -73,6 +74,11 @@ class Plugin extends PluginBase
                 'label' => 'Some permission'
             ],
         ];
+    }
+
+    public function registerSchedule($schedule)
+    {
+        $schedule->call(CacheApiDiemBanCommand::class)->hourly();
     }
 
     /**

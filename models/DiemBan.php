@@ -220,9 +220,8 @@ class DiemBan extends Model
 
         return array_merge($get_infomap_product_defaults, $args);
     }
-    
-    
-    static function get_diem_ban_data($product_code, $province_id, $district_id = 0){
+
+    static function cache_diem_ban_data($product_code, $province_id, $district_id = 0){
         $source = Settings::get('company');
         $token = Settings::get('api_key');
 
@@ -240,11 +239,19 @@ class DiemBan extends Model
         );
     
         $cache_key = "api_diem_ban_{$source}_{$product_code}_{$province_id}_{$district_id}";
-        
+        Cache::forget($cache_key);
         return Cache::remember($cache_key, now()->addMinutes(60), function () use ($endpoint, $header) {
-            return self::send($endpoint, 'POST', $header);    
+            return self::send($endpoint, 'POST', $header);
         });
+    }
     
+    
+    static function get_diem_ban_data($product_code, $province_id, $district_id = 0){
+        $source = Settings::get('company');
+        $cache_key = "api_diem_ban_{$source}_{$product_code}_{$province_id}_{$district_id}";        
+        return Cache::get($cache_key, function () use ($product_code, $province_id, $district_id) {
+            return DiemBan::cache_diem_ban_data($product_code, $province_id, $district_id);
+        });
     }
     
     static function normalize_store_name($name){
