@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Thaiminh\Diemban\Models\Settings;
 use Illuminate\Support\Facades\Cache;
 use Thaiminh\Diemban\Models\DiemBan;
+use Illuminate\Support\Facades\Log;
 
 /**
  * CacheApiDiemBanCommand Command
@@ -27,6 +28,7 @@ class CacheApiDiemBanCommand extends Command
      */
     public function handle()
     {
+        $startTime = microtime(true);
         $product_setting = Settings::get('product_setting');
         if(!$product_setting){
             return;
@@ -35,17 +37,17 @@ class CacheApiDiemBanCommand extends Command
         $product_code = implode('_', $product_setting);
 
         foreach($this->provinces() as $province) {
-            $this->output->writeln($province['province_name']);
             if(in_array(intval($province['id']), [1, 79])) {
                 $districts = self::get_district_by_province_id($province['id']);
                 foreach($districts as $district) {
-                    $this->output->writeln($district['district_name']);
                     DiemBan::cache_diem_ban_data($product_code, $province['id'], $district['id']);
                 }
             } else {
                 DiemBan::cache_diem_ban_data($product_code, $province['id'], 0);
             }
         }
+        $endTime = microtime(true);
+        $this->output->writeln('CACHE_DIEMBAN_TIME: ' . number_format($endTime - $startTime, 3));
         return 0;
     }
 

@@ -18,7 +18,7 @@ class DiemBan extends Model
 
         $str = '';
         if (isset($data['data'])){
-            $dist = $data['data']['districts'];
+            $dist = $data['data']['districts']??null;
             if (!$dist) return '';
             $idx = 1;
             foreach ($dist as $quan_id => $value) {
@@ -240,7 +240,7 @@ class DiemBan extends Model
     
         $cache_key = "api_diem_ban_{$source}_{$product_code}_{$province_id}_{$district_id}";
         Cache::forget($cache_key);
-        return Cache::remember($cache_key, now()->addMinutes(60), function () use ($endpoint, $header) {
+        return Cache::remember($cache_key, now()->addMinutes(70), function () use ($endpoint, $header) {
             return self::send($endpoint, 'POST', $header);
         });
     }
